@@ -1,5 +1,5 @@
 
-- INTEGRATE SLACK WITH SUPABASE EDGE FUNCTIONS
+- INTEGRATE TELEGRAM WITH SUPABASE EDGE FUNCTIONS
 
 # SUPABASE
     - intialize supabase in local system
@@ -43,7 +43,7 @@
         - you can see your created function
 
 
-# SLACK 
+# TELEGRAM 
     - create a custome telegram bot
         - open telegram app
         - search for BotFather and start the bot
