@@ -14,22 +14,24 @@
     ```
         \supabase\functions\functionname\index.ts
     ```
-    - Read DATA FROM await req.text()
-    ``` DATA STRUCTURE
-        token=cndacsadc11&
-        team_id=cndadscsadc11&
-        team_domain=cn435fdacsadc11&
-        channel_id=sdcndacsadc11&
-        channel_name=all-tasks&
-        user_id=sadf89VCEU3C&
-        user_name=user1&
-        command=%2Fadd-task&
-        text=first text&
-        api_app_id=dsdfff&
-        is_enterprise_install=false&
-        response_url=https%3A%2F%2Fhooks.slack.com%2Fcommands%2hTgdNLJ1R04%2F1335320793642%2FvabafdkExQViUzTvasvafdasK8oiV&
-        trigger_id=2222.8243544698059009.vsfnkvsk43432k3k234253.
-    ```
+    - Read DATA FROM await req.json()
+     ```body: {
+                    update_id: 372379775,
+                    message: {
+                        message_id: 8,
+                        from: {
+                            id: 1812288800,
+                            is_bot: false,
+                            first_name: "someOne",
+                            language_code: "en"
+                        },
+                        chat: { id: 1560388800, first_name: "someOne", type: "private" },
+                        date: 173635464240752,
+                        edit_date: 175408263454,
+                        text: "/task checking test",
+                        entities: [ { offset: 0, length: 12, type: "bot_command" } ]
+                    }
+        ```}
     - save the function
     - deploy function on supabase(it need docker so it will automatically generate an image and deploy on supabase).
         ```
@@ -42,40 +44,40 @@
 
 
 # SLACK 
-    - create a custome slack app
-        - go to slack app developer dashboard
+    - create a custome telegram bot
+        - open telegram app
+        - search for BotFather and start the bot
             ```
-                https://api.slack.com/apps
+            /start
             ```
-        - create new app
-        - give name to your app
-        - choose a workspace
-        - hit enter
-        - Enable Required Permissions
-            - Under the OAuth & Permissions section, add the following scopes under Bot Token Scopes:
+        - choose new bot
             ```
-                chat:write: Allows your app to send messages to channels and users.
-                commands: Enables your app to handle slash commands.
-                incoming-webhook: Allows your app to post messages automatically when tasks are created or updated
+            /newbot
             ```
-        - Set Up Slash Commands
-            - Go to the Slash Commands section and click "Create New Command".
-            ``` 
-                Define the command (e.g., /addtask) and set the request URL to the endpoint of your backend (Supabase function or API endpoint).
-                Provide a short description and usage hint for the command.
+        - name your bot
+        - set commands
             ```
-        - Set Up Incoming Webhooks
-            - Under Incoming Webhooks, click "Activate Incoming Webhooks".
+                /setcommands
             ```
-                Click "Add New Webhook to Workspace" and select the channel where you want task notifications to appear.
-                Install the App to Your Workspace
             ```
-        - Once all permissions are set, go to the Install App section and click "Install to Workspace".
+                something - some desc
             ```
-                Authorize the app in the selected workspace.
-                Store OAuth Token and Webhook URL
+        - create a webhook
             ```
-
-        - NOTES - 
-            - After installing, Slack will generate an OAuth access token. Save this token securely, as it will be used to authenticate API requests.
-            - If you're using webhooks, also save the Webhook URL.
+                const botToken = '2435949548:dsjkdfsfkjjkgjdkkjjejdndndh';
+                const edgeFunctionUrl = 'https://projectID.supabase.co/functions/v1/slack-handler';
+                console.log("calling:");
+                fetch(`https://api.telegram.org/bot${botToken}/setWebhook`, {
+                method: 'POST',
+                body: new URLSearchParams({
+                    url: edgeFunctionUrl
+                })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Webhook set:', data);
+                })
+                .catch(error => {
+                    console.error('Error setting webhook:', error);
+                });
+            ```
